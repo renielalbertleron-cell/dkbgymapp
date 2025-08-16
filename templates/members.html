@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Members{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <input id="filterName" placeholder="Filter by name" class="form-control form-control-sm">
+    <select id="filterStatus" class="form-select form-select-sm mt-1">
+      <option value="">All Status</option>
+      <option value="Active">Active</option>
+      <option value="Expired">Expired</option>
+    </select>
+  </div>
+  <div>
+    <a href="/add_member" class="btn btn-primary">➕ Add Member</a>
+    <a href="/export_members" class="btn btn-secondary ms-2">📥 Export CSV</a>
+  </div>
+</div>
+
+<table id="membersTable" class="table table-bordered table-hover">
+  <thead class="table-light">
+    <tr>
+      <th>Photo</th><th>RFID</th><th>Name</th><th>Birthday</th>
+      <th>Last Visit</th><th>Expires</th><th>Status</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in members %}
+    <tr>
+      <td>
+        {% if m.picture %}
+        <img src="{{ url_for('uploaded_file', filename=m.picture) }}" width="50" class="rounded">
+        {% else %}
+        <span class="text-muted">No Photo</span>
+        {% endif %}
+      </td>
+      <td>{{ m.rfid }}</td>
+      <td>{{ m.first_name }} {{ m.middle_name or "" }} {{ m.last_name }}</td>
+      <td>{{ m.birthday }}</td>
+      <td>{{ m.last_visit or "-" }}</td>
+      <td>{{ m.membership_expiration or "-" }}</td>
+      <td>
+        <span class="badge bg-{{ 'success' if m.membership_status=='Active' else 'danger' }}">
+          {{ m.membership_status or '-' }}
+        </span>
+      </td>
+      <td class="d-flex gap-1">
+        <a href="/view_member/{{ m.rfid }}" class="btn btn-sm btn-info">View</a>
+        <a href="/edit_member/{{ m.rfid }}" class="btn btn-sm btn-warning">Edit</a>
+        <form method="POST" action="/delete_member/{{ m.rfid }}">
+          <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this member?')">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+(() => {
+  const table = document.getElementById('membersTable');
+  const filterName = document.getElementById('filterName');
+  const filterStatus = document.getElementById('filterStatus');
+  [filterName, filterStatus].forEach(el => el.oninput = () => {
+    const nameVal = filterName.value.toLowerCase();
+    const statusVal = filterStatus.value;
+    [...table.tBodies[0].rows].forEach(row => {
+      const name = row.cells[2].textContent.toLowerCase();
+      const status = row.cells[6].textContent.trim();
+      row.style.display = 
+        (name.includes(nameVal)) && (statusVal === "" || status === statusVal)
+        ? "" : "none";
+    });
+  });
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Edit Member{% endblock %}
+{% block content %}
+
+<h2>✏️ Edit Member</h2>
+
+<form method="POST" class="row g-3 mt-3">
+  <div class="col-md-4">
+    <label class="form-label">RFID Number</label>
+    <input name="rfid" type="text" class="form-control" value="{{ m.rfid }}" >
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">First Name</label>
+    <input name="first_name" type="text" class="form-control" value="{{ m.first_name }}" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Middle Name</label>
+    <input name="middle_name" type="text" class="form-control" value="{{ m.middle_name }}">
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Last Name</label>
+    <input name="last_name" type="text" class="form-control" value="{{ m.last_name }}" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Birthday</label>
+    <input name="birthday" type="date" class="form-control" value="{{ m.birthday }}" required>
+  </div>
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-success">💾 Save Changes</button>
+    <a href="{{ url_for('members') }}" class="btn btn-secondary ms-2">← Cancel</a>
+  </div>
+</form>
+
+{% endblock %}

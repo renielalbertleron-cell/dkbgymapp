@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Receipt{% endblock %}
+{% block content %}
+<style>
+  .receipt-box {
+    max-width: 400px;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #eee;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333;
+    background-color: #fff;
+  }
+  .receipt-header {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .receipt-subheader {
+    text-align: center;
+    font-size: 12px;
+    margin-bottom: 20px;
+    color: #666;
+  }
+  .receipt-table {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .receipt-table td {
+    padding: 4px 0;
+  }
+  .text-right {
+    text-align: right;
+  }
+  .receipt-total {
+    border-top: 1px dashed #aaa;
+    font-weight: bold;
+    padding-top: 8px;
+  }
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 20px;
+    color: #777;
+  }
+  @media print {
+    .btn {
+      display: none;
+    }
+  }
+</style>
+
+<div class="receipt-box">
+  <div class="receipt-header">💪 GYM & FITNESS</div>
+  <div class="receipt-subheader">Official Sales Receipt</div>
+
+  <p><strong>Date:</strong> {{ date }}</p>
+
+  <table class="receipt-table">
+    <tbody>
+      {% for s in sales %}
+      <tr>
+        <td>{{ s.qty }} x {{ s.product_name }}</td>
+        <td class="text-right">₱{{ '%.2f'|format(s.total) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="text-right receipt-total">
+    TOTAL: ₱{{ '%.2f'|format(total) }}
+  </div>
+
+  <div class="footer-note">
+    Thank you for your purchase!<br>
+    Stay strong and healthy 💪
+  </div>
+
+  <div class="text-center mt-3">
+    <button class="btn btn-outline-dark" onclick="window.print()">🖨️ Print Receipt</button>
+  </div>
+</div>
+{% endblock %}

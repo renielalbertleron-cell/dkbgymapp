@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Sales Records{% endblock %}
+{% block content %}
+  <h2>📄 Sales Records</h2>
+  <table class="table table-bordered">
+    <thead><tr>
+      <th>Sale ID</th><th>Product</th><th>Qty</th><th>Total</th><th>Date</th>
+    </tr></thead>
+    <tbody>
+      {% for s in sales_records %}
+      <tr>
+        <td>{{ s[0] }}</td><td>{{ s[1] }}</td><td>{{ s[2] }}</td><td>₱{{ s[3] }}</td><td>{{ s[4] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+ 

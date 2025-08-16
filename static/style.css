@@ -1,0 +1,7 @@
+body { font-family: Arial, sans-serif; }
+.sidebar { width: 220px; background: #1e1e2f; min-height: 100vh; color: white; }
+.nav-link { color: #ccc; padding: 6px 12px; display: block; text-decoration: none; }
+.nav-link:hover { background: #444; }
+.content { padding: 20px; flex-grow: 1; }
+.card { background: #f8f9fa; margin-bottom: 15px; padding: 15px; border-radius: 6px; }
+ 

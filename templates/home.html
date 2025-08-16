@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>📈 Dashboard Analytics</h2>
+
+<div class="row mb-4">
+  <div class="col">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5>Total Members</h5>
+        <h3>{{ total_members }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5>Active Memberships</h5>
+        <h3>{{ active_memberships }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-4">
+  <label>Time filter:</label>
+  <select id="timeFilter" class="form-select w-auto d-inline-block">
+    <option value="daily">Today</option>
+    <option value="weekly">Last 7 Days</option>
+    <option value="monthly">Last 30 Days</option>
+  </select>
+</div>
+
+<div class="row">
+  {% for key in ['Walk-in','member'] %}
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5>{{ key }} Sales</h5>
+          <h2 class="fs-1" id="sales-{{ key | lower | replace(' ','') }}">
+            ₱{{ daily.get(key,0) | round(2) }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<h4 class="mt-5">📦 Product Sales (last 7 days)</h4>
+<table class="table">
+  <thead><tr><th>Product</th><th>Qty Sold</th><th>Revenue (₱)</th></tr></thead>
+  <tbody>
+    {% for p in product_sales %}
+    <tr><td>{{ p['name'] }}</td><td>{{ p['sold'] }}</td><td>{{ '%.2f'|format(p['revenue']) }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+const daily = {{ daily|tojson }};
+const weekly = {{ weekly|tojson }};
+const monthly = {{ monthly|tojson }};
+document.getElementById('timeFilter').addEventListener('change', e=>{
+  const range = e.target.value;
+  const data = {daily, weekly, monthly}[range];
+  document.getElementById('sales-walk-in').innerText = '₱' + (data['walk-in']||0).toFixed(2);
+  document.getElementById('sales-member').innerText = '₱' + (data['member']||0).toFixed(2);
+});
+</script>
+<a href="{{ url_for('attendance_report') }}" target="_blank" class="btn btn-outline-primary">
+  📋 Show Attendance Table
+</a>
+
+{% endblock %}

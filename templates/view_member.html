@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Member Profile{% endblock %}
+{% block content %}
+
+<div class="card mx-auto my-4 shadow" style="max-width: 600px;">
+  <div class="text-center p-4 bg-light">
+    {% if m.picture %}
+      <img src="{{ url_for('uploaded_file', filename=m.picture) }}"
+           class="rounded-circle mb-2" style="width: 120px; height: 120px; object-fit: cover;" alt="Profile Photo">
+    {% else %}
+      <div class="bg-secondary rounded-circle mb-2" style="width: 120px; height: 120px;"></div>
+    {% endif %}
+    <h3 class="mt-2">{{ m.first_name }} {{ m.middle_name or '' }} {{ m.last_name }}</h3>
+    <p class="text-muted mb-0">RFID: <strong>{{ m.rfid }}</strong></p>
+  </div>
+
+  <div class="card-body">
+    <ul class="list-group list-group-flush mb-3">
+      <li class="list-group-item"><strong>Birthday:</strong> {{ m.birthday }}</li>
+      <li class="list-group-item"><strong>Last Visit:</strong> {{ m.last_visit or '—' }}</li>
+      <li class="list-group-item"><strong>Membership Status:</strong>
+        <span class="badge bg-{{ 'success' if m.membership_status=='Active' else 'warning' if m.membership_status=='Pending' else 'danger' }}">
+          {{ m.membership_status }}
+        </span>
+      </li>
+      <li class="list-group-item"><strong>Membership Expiration:</strong> {{ m.membership_expiration or '—' }}
+        <span class="ms-2 badge bg-secondary">{{ m.membership_expiration | days_left }} days left</span>
+      </li>
+    </ul>
+
+    <div class="text-end">
+      <a href="{{ url_for('edit_member', rfid=m.rfid) }}" class="btn btn-outline-primary me-2">✏️ Edit</a>
+      <a href="{{ url_for('members') }}" class="btn btn-outline-secondary">← Back to List</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

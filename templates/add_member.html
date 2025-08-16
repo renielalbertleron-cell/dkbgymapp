@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Add Member{% endblock %}
+{% block content %}
+<h2>➕ Register New Member</h2>
+
+<form method="POST" enctype="multipart/form-data" class="row g-3 mt-3">
+  <div class="col-md-4">
+    <label class="form-label">RFID Number</label>
+    <input name="rfid" type="text" class="form-control" required autofocus>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">First Name</label>
+    <input name="first_name" type="text" class="form-control" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Middle Name</label>
+    <input name="middle_name" type="text" class="form-control">
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Last Name</label>
+    <input name="last_name" type="text" class="form-control" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Birthday</label>
+    <input name="birthday" type="date" class="form-control" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Upload Photo</label>
+    <input name="photo" type="file" class="form-control">
+  </div>
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-success">💾 Register Member</button>
+  </div>
+</form>
+{% endblock %}

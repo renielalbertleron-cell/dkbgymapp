@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Inventory{% endblock %}
+{% block content %}
+  <h2>📦 Inventory</h2>
+  <table class="table">
+    <thead><tr>
+      <th>Product</th><th>Stock</th><th>Reorder Level</th>
+    </tr></thead>
+    <tbody>
+      {% for i in inventory %}
+      <tr>
+        <td>{{ i[0] }}</td><td>{{ i[1] }}</td><td>{{ i[2] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+ 

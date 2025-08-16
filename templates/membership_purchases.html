@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Membership Purchase{% endblock %}
+{% block content %}
+<div class="card mx-auto my-4 shadow" style="max-width: 600px;">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">🎟️ Membership Purchase</h5>
+  </div>
+  <div class="card-body">
+
+    {% if message %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endif %}
+
+    <form method="POST" class="row g-3">
+      <!-- RFID Input -->
+      <div class="col-md-6">
+        <label class="form-label">Scan/Enter RFID</label>
+        <input name="rfid_manual" type="text" class="form-control" autofocus>
+      </div>
+
+      <!-- Or choose from existing members -->
+      <div class="col-md-6">
+        <label class="form-label">Or Select Member</label>
+        <select name="rfid_select" class="form-select" onchange="this.form.submit()">
+          <option value="">— select member —</option>
+          {% for m in members %}
+            <option value="{{ m.rfid }}" {% if selected and selected.rfid == m.rfid %}selected{% endif %}>
+              {{ m.first_name }} {{ m.last_name }} ({{ m.rfid }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Auto-filled Member Info -->
+      {% if selected %}
+        <div class="col-md-4">
+          <label>Name</label>
+          <input type="text" value="{{ selected.first_name }} {{ selected.last_name }}" class="form-control" readonly>
+        </div>
+        <div class="col-md-4">
+          <label>Birthday</label>
+          <input type="text" value="{{ selected.birthday }}" class="form-control" readonly>
+        </div>
+      {% endif %}
+
+      <!-- Purchase Details -->
+      <div class="col-md-4">
+        <label>Start Date</label>
+        <input name="start_date" type="date" class="form-control" value="{{ today }}" required>
+      </div>
+      <div class="col-md-4">
+        <label>Plan</label>
+        <select name="plan" class="form-select" required>
+          <option value="weekly">Weekly</option>
+          <option value="monthly" selected>Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label>Payment Method</label>
+        <select name="payment_method" class="form-select" required>
+          <option value="cash">Cash</option>
+          <option value="card">Card</option>
+          <option value="online">Online</option>
+        </select>
+      </div>
+
+      <div class="col-12 text-end">
+        <button type="submit" class="btn btn-success">✅ Process Purchase</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

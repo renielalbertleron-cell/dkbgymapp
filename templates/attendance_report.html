@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Log{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>🏋️ Attendance Log</h2>
+
+  <div class="d-flex justify-content-between mb-3">
+    <a href="{{ url_for('export_attendance') }}" class="btn btn-secondary">📥 Export CSV</a>
+    <button onclick="window.open('{{ url_for('attendance_report') }}','AttendanceWindow','width=1000,height=700')" class="btn btn-info">📊 Show Attendance Table</button>
+  </div>
+
+  <table id="attendanceTable" class="table table-bordered table-striped" style="font-size:1.1rem;">
+    <thead class="table-dark">
+      <tr><th>RFID / Name</th><th>Login Time</th><th>Logout Time</th></tr>
+    </thead>
+    <tbody>
+      {% for row in attendance %}
+      <tr class="{{ loop.cycle('table-light','table-white') }}">
+        <td>{{ row.name or row.rfid }}</td>
+        <td>{{ row.login_time }}</td>
+        <td>{{ row.logout_time or '-' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Hidden RFID input -->
+<input type="text" id="rfidInput" autofocus style="position:absolute; opacity:0;">
+
+<!-- RFID Pop-up -->
+<div id="rfidPopup" style="
+  display:none;
+  position:fixed;
+  top:20px; right:20px;
+  background:#007bff;
+  color:#fff;
+  padding:15px;
+  border-radius:8px;
+  font-size:1.2rem;
+  z-index:9999;
+"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('rfidInput');
+  const popup = document.getElementById('rfidPopup');
+
+  const showPopup = (text) => {
+    popup.innerText = text;
+    popup.style.display = 'block';
+    setTimeout(() => popup.style.display = 'none', 3000);
+  };
+
+  input.focus();
+  document.body.addEventListener('click', () => input.focus());
+
+  input.addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+      const rfid = input.value.trim();
+      input.value = '';
+      if (!rfid) return;
+
+      fetch('/process_rfid', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rfid })
+      })
+      .then(r => r.json())
+      .then(data => {
+        showPopup(data.message);
+        // Optional: You can reload table via fetch() or just refresh
+        location.reload();
+      });
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Sales POS{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>🛒 Point of Sale</h2>
+
+  <!-- Product selection -->
+  <form id="posForm" method="POST" class="row align-items-end g-3">
+    <div class="col-md-5">
+      <label>Product</label>
+      <select id="productSel" name="product_id" class="form-select" required>
+        <option value="">Select product...</option>
+        {% for p in products %}
+          <option value="{{ p.id }}" data-price="{{ p.price }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label>Price</label>
+      <input id="price" type="text" class="form-control" readonly>
+    </div>
+    <div class="col-md-2">
+      <label>Qty</label>
+      <input id="qty" name="qty" type="number" class="form-control" min="1" value="1" required>
+    </div>
+    <div class="col-md-2">
+      <label>Subtotal</label>
+      <input id="subtotal" type="text" class="form-control" readonly>
+    </div>
+    <div class="col-md-1">
+      <button type="button" id="addBtn" class="btn btn-primary">➕</button>
+    </div>
+  </form>
+
+  <!-- Cart display -->
+  <table class="table table-bordered mt-4" id="cartTable">
+    <thead><tr><th>Name</th><th>Qty</th><th>Price</th><th>Subtotal</th><th>Action</th></tr></thead>
+    <tbody></tbody>
+    <tfoot><tr><th colspan="3">Total:</th><th id="totalTxt">0.00</th><th></th></tr></tfoot>
+  </table>
+
+  <!-- Finalize Sale -->
+  <form method="POST" action="{{ url_for('complete_sale') }}">
+    <input type="hidden" name="cart_data" id="cartData">
+	<input type="hidden" name="buyer_type" value="walk-in">
+    <button type="submit" class="btn btn-success float-end">🧾 Complete Sale</button>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const prodSel = document.getElementById('productSel'),
+        priceIn = document.getElementById('price'),
+        qtyIn = document.getElementById('qty'),
+        subtotalIn = document.getElementById('subtotal'),
+        addBtn = document.getElementById('addBtn'),
+        cartTable = document.getElementById('cartTable').querySelector('tbody'),
+        totalTxt = document.getElementById('totalTxt'),
+        cartData = document.getElementById('cartData');
+
+  let cart = [];
+
+  function updateSubtotal() {
+    const price = parseFloat(prodSel.selectedOptions[0].dataset.price || 0);
+    const qty = parseInt(qtyIn.value || 1);
+    const sub = (price * qty).toFixed(2);
+    priceIn.value = price.toFixed(2);
+    subtotalIn.value = sub;
+  }
+
+  prodSel.onchange = updateSubtotal;
+  qtyIn.oninput = updateSubtotal;
+
+  addBtn.onclick = () => {
+    const id = prodSel.value, name = prodSel.selectedOptions[0].text;
+    const price = parseFloat(priceIn.value), qty = parseInt(qtyIn.value);
+    if(!id) return alert('Select a product');
+    const sub = (price * qty).toFixed(2);
+    cart.push({id,name,price,qty,sub});
+    renderCart();
+  };
+
+  function renderCart() {
+    cartTable.innerHTML = '';
+    let total = 0;
+    cart.forEach((item,i) => {
+      total += parseFloat(item.sub);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${item.name}</td><td>${item.qty}</td><td>${item.price.toFixed(2)}</td><td>${item.sub}</td><td><button class="btn btn-sm btn-danger">×</button></td>`;
+      tr.querySelector('button').onclick = () => { cart.splice(i,1); renderCart(); };
+      cartTable.append(tr);
+    });
+    totalTxt.textContent = total.toFixed(2);
+    cartData.value = JSON.stringify(cart);
+  }
+});
+</script>
+{% endblock %}
