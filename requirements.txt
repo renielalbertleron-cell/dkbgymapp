@@ -4,13 +4,10 @@ Jinja2==3.1.4
 itsdangerous==2.2.0
 click==8.1.7
 
-# Database
-sqlite3-binary==0.0.1
-
 # For CSV export
 pandas==2.2.2
 
-# For RFID keyboard listening (optional)
+# For RFID keyboard listening (optional, can be removed if only browser-based)
 pynput==1.7.7
 
 # Deployment helpers
