@@ -1,3 +1,4 @@
+# Core web framework
 Flask==3.0.3
 Werkzeug==3.0.2
 Jinja2==3.1.4
@@ -6,9 +7,10 @@ click==8.1.7
 
 # For CSV export
 pandas==2.2.2
+numpy==1.26.4
 
-# For RFID keyboard listening (optional, can be removed if only browser-based)
+# For RFID keyboard listening (optional, remove if only browser-based)
 pynput==1.7.7
 
-# Deployment helpers
+# Deployment (Render uses Gunicorn)
 gunicorn==23.0.0
