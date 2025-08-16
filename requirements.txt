@@ -27,7 +27,6 @@ pyinstaller-hooks-contrib==2025.5
 pynput==1.8.1
 python-dateutil==2.9.0.post0
 pytz==2025.2
-pywin32==311
 pywin32-ctypes==0.2.3
 requests==2.32.4
 setuptools==80.9.0
